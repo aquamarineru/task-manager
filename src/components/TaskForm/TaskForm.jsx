@@ -30,7 +30,7 @@ const TaskForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center space-x-4  p-4 w-full max-w-xl mx-auto"
+      className="flex items-center space-x-4  w-full md:w-1/2 max-w-md mx-auto py-4" 
     >
       <input
         type="text"

@@ -20,8 +20,7 @@ const TasksList = () => {
   });
 
   return (
-    <div>
-      <TaskSearch />
+    <div className="w-full md:max-w-3xl mx-auto px-4">
       <TaskFilter currentFilter={filter} />
       {filteredTasks.length === 0 ? (
         <div className="text-center text-gray mt-4 px-4 py-6 rounded bg-sunsetOrange/20">

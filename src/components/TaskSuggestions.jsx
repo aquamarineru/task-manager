@@ -37,7 +37,7 @@ const TaskSuggestions = () => {
   };
 
   return (
-    <div className="p-4 my-6">
+    <div className="p-4 my-6 sm:px-10 md:max-w-3xl">
       <h2 className="text-2xl font-bold text-graphit mb-4">Task Suggestions</h2>
 
       {loading && <LoadingSpinner />}

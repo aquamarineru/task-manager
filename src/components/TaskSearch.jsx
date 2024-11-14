@@ -22,7 +22,7 @@ const TaskSearch = () => {
       value={searchInput}
       onChange={onChangeHandler}
       placeholder="Search for tasks..."
-      className="flex-grow px-4 py-2 text-graphit border border-gainboro rounded-md focus:outline-none focus:ring-2 focus:ring-greenTeal className='flex items-center space-x-4  ml-4 p-4 w-2/3 max-w-xl mx-auto"
+      className="max-w-full w-full sm:w-1/2 mx-auto px-4 py-2 text-graphit border border-gainboro rounded-md focus:outline-none focus:ring-2 focus:ring-greenTeal"
     />
   );
 };
