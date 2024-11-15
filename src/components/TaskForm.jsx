@@ -31,7 +31,7 @@ const TaskForm = () => {
   return (
     <form 
     onSubmit={handleSubmit}
-    className="flex items-center space-x-4  p-4 w-full max-w-xl mx-auto"
+    className="flex items-center space-x-4  p-4 w-full  mx-auto"
     >
       <input
         type="text"
@@ -43,13 +43,13 @@ const TaskForm = () => {
       />
       <button 
       type="submit"
-      className={`px-6 py-2 text-white rounded-md transition-colors duration-300 ${
+      className={`px-3 py-2 text-white rounded-md transition-colors duration-300 ${
         taskToEdit ? 'bg-sunsetOrange hover:bg-sunsetOrange/90' : 'bg-greenTeal hover:bg-greenTeal/90'
       }`}
       >
         {taskToEdit 
-        ? 'Update Task' 
-        : 'Add Task'}
+        ? 'Update' 
+        : 'Add'}
         </button>
     </form>
   );

@@ -33,7 +33,7 @@ const TasksList = React.memo(() => {
   const handleDragEnd = (result) => {
     if (!result.destination) return;
 
-    const updatedTasks = Array.from(tasks);
+    const updatedTasks = [...tasks];
     const [reorderedTask] = updatedTasks.splice(result.source.index, 1);
     updatedTasks.splice(result.destination.index, 0, reorderedTask);
 
@@ -44,6 +44,7 @@ const TasksList = React.memo(() => {
     <div className="w-full md:max-w-3xl mx-auto px-4">
       <TaskSearch />
       <TaskFilter currentFilter={filter} />
+      
       {filteredTasks.length === 0 ? (
         <div className="text-center text-gray mt-4 px-4 py-6 rounded bg-sunsetOrange/20">
           <p>Nothing found</p>
@@ -72,11 +73,21 @@ const TasksList = React.memo(() => {
                         <div className="space-x-2">
                           <button onClick={() => dispatch(setTaskForEdit(task))} className="px-4 py-2">✏️</button>
                           <button onClick={() => handleDeleteTask(task.id)} className="px-4 py-2">🗑️</button>
-                          {!task.completed && (
-                            <button onClick={() => handleTogglePending(task.id)} className="px-4 py-2">🟢</button>
+                          {!task.pending && !task.completed && (
+                            <button 
+                              onClick={() => handleTogglePending(task.id)} 
+                              className="px-4 py-2 border-[1px] border-greenTeal rounded hover:bg-greenTeal/20"
+                            >
+                              🟢
+                            </button>
                           )}
                           {task.pending && (
-                            <button onClick={() => handleTogglePending(task.id)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Stop</button>
+                            <button 
+                              onClick={() => handleTogglePending(task.id)} 
+                              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                            >
+                              Stop
+                            </button>
                           )}
                         </div>
                       </li>
