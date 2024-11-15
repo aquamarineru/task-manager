@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { setFilter } from '../../redux/slices/tasksSlice';
+import { setFilter } from '../redux/slices/tasksSlice';
 import PropTypes from 'prop-types';
 
 const TaskFilter = ({ currentFilter }) => {

@@ -1,98 +1,98 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { addTaskLocally } from '../redux/slices/tasksSlice';
 import useFetch from '../hooks/useFetch';
 import LoadingSpinner from './LoadingSpinner';
 
-const TaskSuggestions = () => {
+const TaskSuggestions = React.memo(() => {
   const dispatch = useDispatch();
   const { data, loading, error, refetch } = useFetch('https://jsonplaceholder.typicode.com/todos');
+  const [displayedTasks, setDisplayedTasks] = useState([]);
+  const [taskCount, setTaskCount] = useState(5);
 
-  const [shuffledTasks, setShuffledTasks] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(5);
 
+  const handleAddTask = useCallback((task) => {
+    dispatch(addTaskLocally({ title: task.title }));
+  }, [dispatch]);
+
+ 
   useEffect(() => {
     if (data) {
-      setShuffledTasks(data.slice(0, visibleCount)); 
+      setDisplayedTasks(data.slice(0, taskCount));
     }
-  }, [data, visibleCount]);
+  }, [data, taskCount]);
 
-  // Function for adding a task to the list
-  const handleAddTask = (task) => {
-    const newTask = { title: task.title };
-    dispatch(addTaskLocally(newTask));
-  };
+ 
+  const loadMoreTasks = useCallback(() => {
+    if (data) {
+      const newCount = taskCount + 5;
+      setTaskCount(newCount);
+      setDisplayedTasks(data.slice(0, newCount));
+    }
+  }, [data, taskCount]);
 
-  // Function for shuffling the task list
-  const shuffleTasks = () => {
+  const shuffleTasks = useCallback(() => {
     if (data) {
       const shuffled = [...data].sort(() => Math.random() - 0.5);
-      setShuffledTasks(shuffled.slice(0, visibleCount)); 
+      setDisplayedTasks(shuffled.slice(0, taskCount));
     }
-  };
+  }, [data, taskCount]);
 
-  // Function to load more tasks
-  const loadMoreTasks = () => {
-    setVisibleCount((prevCount) => prevCount + 5);
-  };
-
-  return (
-    <div className="p-4 my-6 sm:px-10 md:max-w-3xl">
-      <h2 className="text-2xl font-bold text-graphit mb-4">Task Suggestions</h2>
-
-      {loading && <LoadingSpinner />}
-
-      {error && (
-        <div className="text-sunsetOrange">
-          Data loading error: {error}
-          <button
-            className="ml-4 px-4 py-2 bg-sunsetOrange text-white rounded hover:bg-sunsetOrange"
-            onClick={refetch}
-          >
-            Retry
-          </button>
-        </div>
-      )}
-       {/* Fallback UI if no data is available */}
-       {!loading && !data && !error && (
-        <div className="text-gray-600 text-center mt-4">
-          No tasks available. Please try again later.
-        </div>
-      )}
-
-      {shuffledTasks.length > 0 && (
-        <>
-          <ul>
-            {shuffledTasks.map((task) => (
-              <li key={task.id} className="flex justify-between items-center bg-gainboro p-3 rounded my-2">
-                <span>{task.title}</span>
-                <button
-                  className="bg-greenTeal text-white px-4 py-2 rounded hover:bg-greenTeal/80"
-                  onClick={() => handleAddTask(task)}
-                >
-                  Add
-                </button>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-4">
-            <button
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mr-4"
-              onClick={loadMoreTasks}
-            >
-              Load More Tasks
-            </button>
-            <button
-              className="px-4 py-2 bg-gray hover:bg-gray-700 text-white rounded"
-              onClick={shuffleTasks}
-            >
-              Shuffle Tasks
-            </button>
-          </div>
-        </>
-      )}
+  if (loading) return <LoadingSpinner />;
+  if (error) return (
+    <div className="text-sunsetOrange">
+      {error}
+      <button
+        onClick={refetch}
+        className="ml-4 px-4 py-2 bg-graphit text-white rounded hover:bg-blue-600"
+      >
+        Retry
+      </button>
     </div>
   );
-};
+
+  return (
+    <div className="container p-4 my-6 md:px-32 mx-auto">
+      <h2 className="text-2xl font-bold text-graphit mb-4 text-center">Task Suggestions</h2>
+      
+      {displayedTasks.length === 0 && <p className="text-gray-600">No tasks available</p>}
+      
+      <ul>
+        {displayedTasks.map(task => (
+          <li 
+            key={task.id} 
+            className="flex justify-between items-center bg-gainboro p-3 rounded my-2"
+          >
+            <span>{task.title}</span>
+            <button 
+              onClick={() => handleAddTask(task)}
+              className="bg-greenTeal text-white px-4 py-2 rounded hover:bg-greenTeal/80"
+            >
+              Add
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-4 flex space-x-4 justify-center">
+        {/* Кнопка для загрузки дополнительных задач */}
+        <button 
+          onClick={loadMoreTasks}
+          disabled={taskCount >= data.length}
+          className={`px-4 py-2 ${taskCount >= data.length ? 'bg-gray-300' : 'bg-graphit hover:bg-grathit/20'} text-white rounded `}
+        >
+          Load More
+        </button>
+        
+        <button 
+          onClick={shuffleTasks}
+          className="px-4 py-2 bg-gray text-white rounded hover:bg-gray-700"
+        >
+          Shuffle Tasks
+        </button>
+      </div>
+    </div>
+  );
+});
 
 export default TaskSuggestions;

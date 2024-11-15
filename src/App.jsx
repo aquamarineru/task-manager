@@ -1,21 +1,27 @@
-import Heading from "./components/Heading"
-import TaskForm from "./components/TaskForm/TaskForm"
-import TasksList from "./components/TaskList/TasksList"
-import TaskSuggestions from "./components/TaskSuggestions"
-import TaskSearch from "./components/TaskSearch"
-
-function App() {
+import React, { Suspense, lazy } from 'react';
+import { Provider } from 'react-redux';
+import store from './store/store';
+import LoadingSpinner from './components/LoadingSpinner';
 
 
-  return (
-    <div className="container py-16 px-6  min-h-screen mx-auto flex justify-center flex-col">
-    <Heading />
-    <TaskForm />
-    <TaskSearch />
-    <TasksList />
-    <TaskSuggestions />
-    </div>
-  )
-}
 
-export default App
+const TasksList = lazy(() => import('./components/TaskList'));
+const TaskForm = lazy(() => import('./components/TaskForm'));
+const TaskSuggestions = lazy(() => import('./components/TaskSuggestions'))
+
+const App = () => (
+  <Provider store={store}>
+    <Suspense fallback={<LoadingSpinner />}>
+      <div className="container mx-auto my-16">
+        <h1 className="text-center text-4xl font-bold">
+            Your Task Manager
+        </h1>
+        <TaskForm />
+        <TasksList />
+        <TaskSuggestions />
+      </div>
+    </Suspense>
+  </Provider>
+);
+
+export default App;
