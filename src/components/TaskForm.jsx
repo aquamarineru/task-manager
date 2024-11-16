@@ -31,7 +31,7 @@ const TaskForm = () => {
   return (
     <form 
     onSubmit={handleSubmit}
-    className="flex items-center space-x-4  p-4 w-full  mx-auto"
+    className="flex items-center space-x-4  p-4 w-full  mx-auto sm:w-2/3 md:w-1/2"
     >
       <input
         type="text"
